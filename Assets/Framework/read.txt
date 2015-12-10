@@ -1,0 +1,56 @@
+﻿
+文件开头标识规定：
+	
+	L -->   自己，在所有文件前加上
+
+	A -->	抽象类
+
+	C -->	一般的类
+
+	S -->   静态类
+
+	I -->	接口
+
+	T -->	泛型类
+
+	CS -->  静态类
+
+	CT -->  一般泛型类
+
+	AT -->  抽象泛型类
+
+Folder
+
+	LCommon   --  公用库
+
+	LModule -- 所有模块
+		
+		LBase -- 基础模块
+
+		LJson -- json  数据操作模块
+
+		LLog -- 日志管理模块
+
+		LMessage  --  通讯模块
+
+			LHttps -- http 通讯
+
+			LLocal -- 本地数据保存
+
+			LSocket -- socket 通讯
+
+		LProfiler -- 系统分析器模块
+
+		LShader -- shader 管理模块
+
+		LSources --  资源管理模块
+
+		LUI -- ui 界面管理模块
+
+	LUtils --  简易实用组件公用库
+
+	Editor  --  编辑器模式下使用库
+
+Files
+	
+	LCTestFramework  --  测试框架文件
