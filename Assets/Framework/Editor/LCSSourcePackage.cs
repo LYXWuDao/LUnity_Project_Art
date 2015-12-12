@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using LGame.LBehaviour;
 using LGame.LDebug;
 using UnityEditor;
@@ -39,9 +40,14 @@ public class LCSSourcePackage : LABehaviour
         string packPath = string.Format("{0}/{1}.data", savePath, GetSelectionName(obj));
         LCSConsole.WriteError("pack path = " + packPath);
 
-        // 得到选择的ui，如果是文件家 返回下层所以ui
+        // 得到选择的ui，如果是文件夹 返回下层所以ui
         Object[] selects = Selection.GetFiltered(typeof(Object), SelectionMode.Assets | SelectionMode.DeepAssets | SelectionMode.OnlyUserModifiable);
-        BuildAssetBundleOptions bundleOptions = BuildAssetBundleOptions.CompleteAssets;
+        BuildAssetBundleOptions bundleOptions = BuildAssetBundleOptions.DeterministicAssetBundle |
+                                                BuildAssetBundleOptions.CollectDependencies |
+                                                BuildAssetBundleOptions.CompleteAssets |
+                                                BuildAssetBundleOptions.DisableWriteTypeTree;
+
+        BuildPipeline.PushAssetDependencies();
         if (selects.Length == 1)
         {
             // 打包  
@@ -52,6 +58,8 @@ public class LCSSourcePackage : LABehaviour
             // 打包  
             BuildPipeline.BuildAssetBundle(null, selects, packPath, bundleOptions, BuildTarget.Android);
         }
+        BuildPipeline.PopAssetDependencies();
+
         AssetDatabase.Refresh();
     }
 
