@@ -17,7 +17,7 @@ public class LCTestFramework : LABehaviour
 {
 
     public override void Awake()
-    {  
+    {
 
         Dictionary<string, string> dic = new Dictionary<string, string>();
 

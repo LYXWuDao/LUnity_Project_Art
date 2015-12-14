@@ -131,7 +131,7 @@ namespace LGame.LUI
         public static LAUIBehaviour TopWindow()
         {
             List<string> winNames = FindKeys<LCSUIManage>();
-            if (winNames.Count <= 0) return null;
+            if (winNames == null || winNames.Count <= 0) return null;
             string winName = winNames[winNames.Count - 1];
             return Find<LCSUIManage>(winName);
         }
@@ -149,8 +149,19 @@ namespace LGame.LUI
         /// <summary>
         /// 同步打开界面
         /// </summary>
-        /// <param name="winName">界面的名字，唯一</param>
-        /// <param name="winPath">界面加载路径</param>
+        /// <param name="winName">
+        /// 
+        /// 界面的名字，唯一
+        /// 例如： uiLogin
+        /// 
+        /// </param>
+        /// <param name="winPath">
+        /// 
+        /// 界面加载路径
+        /// 
+        /// 相对的完整路径，例如：UI/uiLogin.data
+        /// 
+        /// </param>
         public static void OpenWindow(string winName, string winPath)
         {
             if (string.IsNullOrEmpty(winName))

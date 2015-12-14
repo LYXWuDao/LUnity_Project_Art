@@ -191,19 +191,16 @@ namespace LGame.LDebug
         public override void OnGUI()
         {
             if (!LCSConfig.IsDebugMode) return;
-            Rect rect = new Rect(5f, 5f, 1000f, 18f);
+            Rect rect = new Rect(5f, 5f, 30000f, 40f);
 
             for (int i = 0, imax = _guiLogs.Count; i < imax; ++i)
             {
                 GuiLogEntity entity = _guiLogs[i];
-                GUI.color = Color.black;
-                GUI.Label(rect, entity.LogString);
-                rect.y -= 1f;
-                rect.x -= 1f;
+                GUI.skin.label.fontSize = 20;
                 GUI.color = entity.LogColor;
                 GUI.Label(rect, entity.LogString);
-                rect.y += 18f;
-                rect.x += 1f;
+                rect.y += 40f;
+                rect.x += 2f;
             }
         }
 

@@ -64,7 +64,7 @@ namespace LGame.LCommon
         /// <returns></returns>
         public static string UnityBuildRootPath()
         {
-            return UnityAssets() + "SourceAssets/";
+            return "E:/selfworkspace/LUnity/LUnity_Project_Data/android/";
         }
 
         /// <summary>
@@ -80,6 +80,17 @@ namespace LGame.LCommon
         }
 
         /// <summary>
+        /// 
+        /// untiy  StreamingAssets 路径 下的 Assets文件夹
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static string UnityStreamingDefaultPath()
+        {
+            return "Assets/";
+        }
+
+        /// <summary>
         /// 游戏打包时,更新包资源根目录的位置
         /// 
         /// untiy  StreamingAssets/Assets 路径 
@@ -87,6 +98,9 @@ namespace LGame.LCommon
         /// <returns></returns>
         public static string UnityStreamingSourcePath()
         {
+#if !UNITY_EDITOR && UNITY_ANDROID
+            return UnityStreamingDefaultPath();
+#endif
             return UnityStreamingAssets() + "Assets/";
         }
 
@@ -97,6 +111,15 @@ namespace LGame.LCommon
         public static string UnityLogFilePath()
         {
             return UnityAssets() + "log.txt";
+        }
+
+        /// <summary>
+        /// Android 工具类地址
+        /// </summary>
+        /// <returns></returns>
+        public static string UnityAndroidUtilPath()
+        {
+            return "com.LUnity.game.LUtils.LUnityUtils";
         }
 
     }
