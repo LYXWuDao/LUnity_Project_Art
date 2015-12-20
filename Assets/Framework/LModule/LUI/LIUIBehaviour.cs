@@ -15,6 +15,15 @@ namespace LGame.LUI
 
     interface LIUIBehaviour
     {
+        /// <summary>
+        ///  子类实现和调用
+        /// </summary>
+        void OnAwake();
+
+        /// <summary>
+        /// 子类实现和调用
+        /// </summary>
+        void OnStart();
 
         /// <summary>
         /// 打开界面
@@ -42,6 +51,11 @@ namespace LGame.LUI
         /// 关闭并销毁该界面
         /// </summary>
         void OnClose();
+
+        /// <summary>
+        /// 刷新面板
+        /// </summary>
+        void OnRefresh();
 
         /// <summary>
         ///  界面获得焦点

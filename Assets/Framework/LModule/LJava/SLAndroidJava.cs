@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LGame.LCommon;
 using UnityEngine;
 
-namespace Game.LAndroid
+namespace LGame.LAndroid
 {
 
     /*****
@@ -134,7 +134,7 @@ namespace Game.LAndroid
         /// <param name="args">参数</param>
         public static void CallStatic(string methodName, params object[] args)
         {
-            CallStatic(LCSPathHelper.UnityAndroidUtilPath(), methodName, args);
+            CallStatic(SLPathHelper.UnityAndroidUtilPath(), methodName, args);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Game.LAndroid
         /// <returns></returns>
         public static T CallStatic<T>(string methodName, params object[] args)
         {
-            return CallStatic<T>(LCSPathHelper.UnityAndroidUtilPath(), methodName, args);
+            return CallStatic<T>(SLPathHelper.UnityAndroidUtilPath(), methodName, args);
         }
 
         /// <summary>

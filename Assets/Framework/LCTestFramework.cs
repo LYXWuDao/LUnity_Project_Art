@@ -13,7 +13,7 @@ using UnityEngine;
  * 
  */
 
-public class LCTestFramework : LABehaviour
+public class LCTestFramework : ALBehaviour
 {
 
     public override void Awake()
@@ -23,7 +23,7 @@ public class LCTestFramework : LABehaviour
 
         string value;
         dic.TryGetValue(string.Empty, out value);
-        Debug.Log(value);
+        SLDebugHelper.Write(value);
 
     }
 
