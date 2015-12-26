@@ -4,7 +4,7 @@ using LGame.LBehaviour;
 using LGame.LCommon;
 using UnityEngine;
 
-namespace LGame.LUtils
+namespace LGame.LEvent
 {
 
     /****

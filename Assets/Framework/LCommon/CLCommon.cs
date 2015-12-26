@@ -117,6 +117,17 @@ namespace LGame.LCommon
         /// 加载视频
         /// </summary>
         AudioSource = 6,
+
+        /// <summary>
+        /// 加载文本 Asset
+        /// </summary>
+        TextAsset = 7,
+
+        /// <summary>
+        /// 直接加载的文本内容
+        /// </summary>
+        TextContent = 8,
+
     }
 
     /// <summary>
@@ -159,7 +170,7 @@ namespace LGame.LCommon
 
     /***
      * 
-     * 导入的二进制文件实体
+     * 导入资源实体类
      * 
      */
 
@@ -172,11 +183,6 @@ namespace LGame.LCommon
         public string SourceId = string.Empty;
 
         /// <summary>
-        ///  资源 AssetBundle
-        /// </summary>
-        public AssetBundle Bundle = null;
-
-        /// <summary>
         /// 资源的名字
         /// </summary>
         public string ResName = string.Empty;
@@ -187,14 +193,9 @@ namespace LGame.LCommon
         public string BundlePath = string.Empty;
 
         /// <summary>
-        /// 加载的脚步
+        ///  资源 AssetBundle
         /// </summary>
-        public string WinScript = string.Empty;
-
-        /// <summary>
-        /// 资源加载类型
-        /// </summary>
-        public LoadType Type = LoadType.Object;
+        public AssetBundle Bundle = null;
 
         /// <summary>
         /// 加载的资源
@@ -202,62 +203,29 @@ namespace LGame.LCommon
         public UnityEngine.Object LoadObj = null;
 
         /// <summary>
+        /// 资源加载类型
+        /// </summary>
+        public LoadType Type = LoadType.Object;
+
+        /// <summary>
         /// 资源的二进制数据
         /// </summary>
         public byte[] SourceBytes = null;
 
         /// <summary>
-        /// 文本内容
+        /// 直接加载的文本文件内容
         /// </summary>
         public string TextContent = string.Empty;
 
         /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// Object  加载获得的资源
+        /// 资源加载完成
         /// </summary>
-        public Action<string, UnityEngine.Object> CallObject = null;
+        public bool IsDone = false;
 
         /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// GameObject   加载获得的资源
+        /// 加载进度
         /// </summary>
-        public Action<string, GameObject> CallGameObject = null;
-
-        /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// Texture2D   加载获得的资源
-        /// </summary>
-        public Action<string, Texture2D> CallTexture = null;
-
-        /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// UIAtlas   加载获得的资源
-        /// </summary>
-        public Action<string, UIAtlas> CallUIAtlas = null;
-
-        /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// AudioClip   加载获得的资源
-        /// </summary>
-        public Action<string, AudioClip> CallAudioClip = null;
-
-        /// <summary>
-        /// 回调函数
-        /// 
-        /// 异步加载资源回调
-        /// AudioSource   加载获得的资源
-        /// </summary>
-        public Action<string, AudioSource> CallAudioSource = null;
+        public float Progress = 0;
 
         public LoadSourceEntity()
         {

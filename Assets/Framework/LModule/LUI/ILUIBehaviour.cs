@@ -13,7 +13,7 @@ namespace LGame.LUI
      * 
      */
 
-    interface LIUIBehaviour
+    interface ILUIBehaviour
     {
         /// <summary>
         ///  子类实现和调用

@@ -14,12 +14,12 @@ namespace LGame.LUI
      * ui 界面响应事件行为组件
      *  
      * 如果是 c# 界面则直接继承它
-     * 如果是lua 界面 则需要继承 LCLuaPage
+     * 如果是lua 界面 则需要继承 CLUILuaBehaviour
      * 
      * 
      */
 
-    public class ALUIBehaviour : ALBehaviour, LIUIBehaviour
+    public class CLUIBehaviour : ALBehaviour, ILUIBehaviour
     {
 
         /// <summary>

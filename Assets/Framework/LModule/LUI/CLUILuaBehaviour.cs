@@ -12,7 +12,7 @@ namespace LGame.LUI
      * 
      */
 
-    public class CLLuaBehaviour : ALUIBehaviour
+    public class CLUILuaBehaviour : CLUIBehaviour
     {
 
         // todo: 增加使用lua 时界面管理操作

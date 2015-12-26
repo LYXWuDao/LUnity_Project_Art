@@ -16,7 +16,7 @@ namespace LGame.LUI
      *   界面操作入口
      *  
      */
-    public sealed class SLUIManage : ATLManager<ALUIBehaviour>
+    public sealed class SLUIManage : ATLManager<CLUIBehaviour>
     {
         /// <summary>
         /// 私有话 
@@ -46,7 +46,7 @@ namespace LGame.LUI
         /// <param name="winPath">加载资源路径</param>
         /// <param name="winName">打开界面的名字</param>
         /// <param name="winScript">界面脚本</param>
-        private static ALUIBehaviour CreatePage(string winName, string winPath, string winScript = "")
+        private static CLUIBehaviour CreatePage(string winName, string winPath, string winScript = "")
         {
             if (string.IsNullOrEmpty(winName))
             {
@@ -58,7 +58,8 @@ namespace LGame.LUI
                 SLDebugHelper.WriteError("加载资源 AssetBundle 文件路径为空! bundlePath = " + winPath);
                 return null;
             }
-            GameObject ui = SLManageSource.LoadAssetSource(winName, winPath);
+            LoadSourceEntity entity = SLManageSource.LoadAssetSource(winName, winPath, LoadType.Object);
+            GameObject ui = entity != null && entity.LoadObj != null ? entity.LoadObj as GameObject : null;
             if (ui == null)
             {
                 SLDebugHelper.WriteError("加载的资源不存在!");
@@ -67,17 +68,17 @@ namespace LGame.LUI
             GameObject go = GameObject.Instantiate(ui) as GameObject;
             if (go == null) return null;
             SLCompHelper.InitTransform(go, UIRoot);
-            ALUIBehaviour uiSprite = SLCompHelper.GetComponent<ALUIBehaviour>(go);
+            CLUIBehaviour uiSprite = SLCompHelper.GetComponent<CLUIBehaviour>(go);
             if (uiSprite != null || string.IsNullOrEmpty(winScript)) return uiSprite;
 
             if (SLConfig.IsLuaWindow)
             {
-                uiSprite = SLCompHelper.AddComponet<CLLuaBehaviour>(go);
+                uiSprite = SLCompHelper.AddComponet<CLUILuaBehaviour>(go);
                 // todo: 处理lua 初始化的问题
             }
             else
             {
-                uiSprite = go.AddComponent(winScript) as ALUIBehaviour;
+                uiSprite = go.AddComponent(winScript) as CLUIBehaviour;
             }
             return uiSprite;
         }
@@ -89,7 +90,7 @@ namespace LGame.LUI
         /// <param name="winPath">加载资源路径</param>
         /// <param name="win">返回的界面</param>
         /// <param name="winScript">界面脚本</param>
-        private static bool TryCreatePage(string winName, string winPath, out ALUIBehaviour win, string winScript = "")
+        private static bool TryCreatePage(string winName, string winPath, out CLUIBehaviour win, string winScript = "")
         {
             win = CreatePage(winName, winPath, winScript);
             return win != null;
@@ -115,24 +116,26 @@ namespace LGame.LUI
             GameObject ui = GameObject.Instantiate(go) as GameObject;
             if (ui == null) return;
             SLCompHelper.InitTransform(ui, UIRoot);
-            ALUIBehaviour win = SLCompHelper.GetComponent<ALUIBehaviour>(ui);
+            CLUIBehaviour win = SLCompHelper.GetComponent<CLUIBehaviour>(ui);
             string script = _asyncScripts.Find(winName);
             if (win == null && !string.IsNullOrEmpty(script))
             {
                 if (SLConfig.IsLuaWindow)
                 {
-                    win = SLCompHelper.AddComponet<CLLuaBehaviour>(go);
+                    win = SLCompHelper.AddComponet<CLUILuaBehaviour>(go);
                     // todo: 处理lua 初始化的问题
                 }
                 else
                 {
-                    win = ui.AddComponent(script) as ALUIBehaviour;
+                    win = ui.AddComponent(script) as CLUIBehaviour;
                 }
                 _asyncScripts.Remove(winName);
             }
 
+            if (win == null) win = SLCompHelper.FindComponet<CLUIBehaviour>(ui);
+
             int depth = 1;
-            ALUIBehaviour topWin = TopWindow();
+            CLUIBehaviour topWin = TopWindow();
             if (topWin != null) depth = topWin.WinDepth + SLConfig.DepthSpan;
 
             // 初始化当前界面
@@ -178,7 +181,7 @@ namespace LGame.LUI
         /// 得到当前最高的 ui 界面
         /// </summary>
         /// <returns></returns>
-        public static ALUIBehaviour TopWindow()
+        public static CLUIBehaviour TopWindow()
         {
             List<string> winNames = FindKeys<SLUIManage>();
             if (winNames == null || winNames.Count <= 0) return null;
@@ -191,7 +194,7 @@ namespace LGame.LUI
         /// </summary>
         /// <param name="topWin"></param>
         /// <returns></returns>
-        public static bool TryTopWindow(out ALUIBehaviour topWin)
+        public static bool TryTopWindow(out CLUIBehaviour topWin)
         {
             return (topWin = TopWindow()) != null;
         }
@@ -213,7 +216,7 @@ namespace LGame.LUI
         /// 
         /// </param>
         /// <param name="winScript">界面的脚本</param>
-        public static void OpenWindow(string winName, string winPath, string winScript)
+        public static void OpenWindow(string winName, string winPath, string winScript = "")
         {
             if (string.IsNullOrEmpty(winName))
             {
@@ -227,12 +230,12 @@ namespace LGame.LUI
                 return;
             }
 
-            ALUIBehaviour win = null;
+            CLUIBehaviour win = null;
             if (TryFind<SLUIManage>(winName, out win)) return;
 
             int depth = 1;
             // 当前最高的界面失去焦点
-            ALUIBehaviour topWin = TopWindow();
+            CLUIBehaviour topWin = TopWindow();
             if (topWin != null)
             {
                 depth = topWin.WinDepth + SLConfig.DepthSpan;
@@ -253,19 +256,23 @@ namespace LGame.LUI
         /// <summary>
         /// 异步打开界面
         /// </summary>
-        /// <param name="winName"></param>
-        /// <param name="winPath"></param>
+        /// <param name="winName">界面ui的名字</param>
+        /// <param name="winPath">界面ui的加载路径</param>
+        /// <param name="winScript">界面打开后加载的脚本</param>
         public static void AsyncOpenWindow(string winName, string winPath, string winScript = "")
         {
-            ALUIBehaviour win = null;
+            CLUIBehaviour win = null;
             if (TryFind<SLUIManage>(winName, out win)) return;
 
             // 当前最高的界面失去焦点
-            ALUIBehaviour topWin = TopWindow();
+            CLUIBehaviour topWin = TopWindow();
             if (topWin != null) topWin.OnLostFocus();
 
             _asyncScripts.Add(winName, winScript);
-            SLManageSource.AsyncLoadAssetSource(winName, winPath, AsyncOpenWindowCallback);
+            SLManageSource.AsyncLoadAssetSource(winName, winPath, LoadType.Object, delegate(LoadSourceEntity entity)
+            {
+                AsyncOpenWindowCallback(winName, entity != null && entity.LoadObj != null ? entity.LoadObj as GameObject : null);
+            });
         }
 
         /// <summary>
@@ -273,7 +280,7 @@ namespace LGame.LUI
         /// </summary>
         public static void CloseTopWindow()
         {
-            ALUIBehaviour win = null;
+            CLUIBehaviour win = null;
             if (!TryTopWindow(out win)) return;
             win.Destroy();
             Remove<SLUIManage>(win.WinName);
@@ -284,7 +291,7 @@ namespace LGame.LUI
         /// </summary>
         public static void CloseWindow(string winName)
         {
-            ALUIBehaviour win = null;
+            CLUIBehaviour win = null;
             if (!TryFind<SLUIManage>(winName, out win)) return;
             CloseWindow(win);
         }
@@ -293,12 +300,12 @@ namespace LGame.LUI
         /// 关闭界面
         /// </summary>
         /// <param name="win"></param>
-        public static void CloseWindow(ALUIBehaviour win)
+        public static void CloseWindow(CLUIBehaviour win)
         {
             if (win == null) return;
             win.Destroy();
             Remove<SLUIManage>(win.WinName);
-            ALUIBehaviour topWin = null;
+            CLUIBehaviour topWin = null;
             if (!TryTopWindow(out topWin)) return;
             topWin.OnFocus();
         }
@@ -308,7 +315,7 @@ namespace LGame.LUI
         /// </summary>
         public static void CloseAllWindow()
         {
-            List<ALUIBehaviour> win = FindValues<SLUIManage>();
+            List<CLUIBehaviour> win = FindValues<SLUIManage>();
             if (win == null) return;
             for (int i = 0, len = win.Count; i < len; i++) CloseWindow(win[i]);
         }
@@ -326,13 +333,13 @@ namespace LGame.LUI
         {
             if (string.IsNullOrEmpty(winName))
             {
-                List<ALUIBehaviour> win = FindValues<SLUIManage>();
+                List<CLUIBehaviour> win = FindValues<SLUIManage>();
                 if (win == null) return;
                 for (int i = 0, len = win.Count; i < len; i++) win[i].OnRefresh();
             }
             else
             {
-                ALUIBehaviour win = null;
+                CLUIBehaviour win = null;
                 if (!TryFind<SLUIManage>(winName, out win)) return;
                 win.OnRefresh();
             }

@@ -54,6 +54,7 @@ namespace LGame.LBase
         /// <param name="value">值</param>
         public static void Add<T>(string key, TValue value)
         {
+            if (string.IsNullOrEmpty(key)) return;
             LCTManagerEntity<TValue> entity;
             if (!TryFind<T>(out entity))
             {
