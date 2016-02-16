@@ -227,6 +227,11 @@ namespace LGame.LCommon
         /// </summary>
         public float Progress = 0;
 
+        /// <summary>
+        /// 资源加载完成后回调
+        /// </summary>
+        public Action<LoadSourceEntity> Finish = null;
+
         public LoadSourceEntity()
         {
             SourceId = SLGuid.NewUpperGuid();
