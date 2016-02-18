@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c67f30c71cefb4f4c9d8d45054eac71c
+guid: 4b50540769807fb47864c136966ee171
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 2
@@ -39,7 +39,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 0
-  textureType: 0
+  textureType: -1
   buildTargetSettings: []
   spriteSheet:
     sprites: []
