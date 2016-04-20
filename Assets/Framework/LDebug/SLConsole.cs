@@ -18,19 +18,19 @@ namespace LGame.LDebug
         /// </summary>
         /// <param name="msg">输入内容</param>
         /// <param name="logType">输出的类型</param>
-        private static void WriteDebug(object msg, DebugType logType)
+        private static void WriteDebug(object msg, LLogType logType)
         {
             if (!SLConfig.IsDebugMode) return;
             switch (logType)
             {
-                case DebugType.Log:
-                    UnityEngine.Debug.Log(msg);
+                case LLogType.Log:
+                    Debug.Log(msg);
                     break;
-                case DebugType.Warning:
-                    UnityEngine.Debug.LogWarning(msg);
+                case LLogType.Warning:
+                    Debug.LogWarning(msg);
                     break;
-                case DebugType.Error:
-                    UnityEngine.Debug.LogError(msg);
+                case LLogType.Error:
+                    Debug.LogError(msg);
                     break;
             }
         }
@@ -41,7 +41,7 @@ namespace LGame.LDebug
         /// <param name="msg">输出日志</param>
         public static void Write(object msg)
         {
-            WriteDebug(msg, DebugType.Log);
+            WriteDebug(msg, LLogType.Log);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void Write(string msg, params object[] args)
         {
-            WriteDebug(string.Format(msg, args), DebugType.Log);
+            WriteDebug(string.Format(msg, args), LLogType.Log);
         }
 
         /// <summary>
@@ -60,14 +60,13 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void Write(params object[] args)
         {
-            if (!SLConfig.IsDebugMode) return;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             for (int i = 0; i < args.Length; ++i)
             {
                 sb.Append(args[i]);
                 sb.Append(", ");
             }
-            WriteDebug(sb.ToString(), DebugType.Log);
+            WriteDebug(sb.ToString(), LLogType.Log);
         }
 
         /// <summary>
@@ -76,7 +75,7 @@ namespace LGame.LDebug
         /// <param name="msg"></param>
         public static void WriteError(object msg)
         {
-            WriteDebug(msg, DebugType.Error);
+            WriteDebug(msg, LLogType.Error);
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void WriteError(string msg, params object[] args)
         {
-            WriteDebug(string.Format(msg, args), DebugType.Error);
+            WriteDebug(string.Format(msg, args), LLogType.Error);
         }
 
         /// <summary>
@@ -95,14 +94,13 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void WriteError(params object[] args)
         {
-            if (!SLConfig.IsDebugMode) return;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             for (int i = 0; i < args.Length; ++i)
             {
                 sb.Append(args[i]);
                 sb.Append(", ");
             }
-            WriteDebug(sb.ToString(), DebugType.Error);
+            WriteDebug(sb.ToString(), LLogType.Error);
         }
 
         /// <summary>
@@ -111,7 +109,7 @@ namespace LGame.LDebug
         /// <param name="msg"></param>
         public static void WriteWarning(object msg)
         {
-            WriteDebug(msg, DebugType.Warning);
+            WriteDebug(msg, LLogType.Warning);
         }
 
         /// <summary>
@@ -121,7 +119,7 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void WriteWarning(string msg, params object[] args)
         {
-            WriteDebug(string.Format(msg, args), DebugType.Warning);
+            WriteDebug(string.Format(msg, args), LLogType.Warning);
         }
 
         /// <summary>
@@ -130,14 +128,13 @@ namespace LGame.LDebug
         /// <param name="args"></param>
         public static void WriteWarning(params object[] args)
         {
-            if (!SLConfig.IsDebugMode) return;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             for (int i = 0; i < args.Length; ++i)
             {
                 sb.Append(args[i]);
                 sb.Append(", ");
             }
-            WriteDebug(sb.ToString(), DebugType.Warning);
+            WriteDebug(sb.ToString(), LLogType.Warning);
         }
 
     }

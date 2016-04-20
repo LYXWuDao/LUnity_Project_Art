@@ -6,7 +6,10 @@ using UnityEngine;
 namespace LGame.LEditor
 {
 
-    public class SLSourcePackage
+    /// <summary>
+    /// 管理和操作编辑器下的资源
+    /// </summary>
+    public class SLEditorResourceManage
     {
 
         /// <summary>
@@ -24,12 +27,70 @@ namespace LGame.LEditor
         }
 
         /// <summary>
+        /// 将当前路径下的所有文件保存到另一个地方
+        /// 
+        /// 循环拷贝文件
+        /// </summary>
+        private static void LoopCopyFile(string sourcePath, string savePath)
+        {
+            DirectoryInfo info = new DirectoryInfo(sourcePath);
+
+            DirectoryInfo[] childInfo = info.GetDirectories();
+            for (int i = 0, len = childInfo.Length; i < len; i++)
+            {
+                DirectoryInfo dinfo = childInfo[i];
+                string folder = string.Format("{0}/{1}", savePath, dinfo.Name);
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                LoopCopyFile(string.Format("{0}/{1}", sourcePath, dinfo.Name), folder);
+            }
+
+            FileInfo[] fileInfo = info.GetFiles();
+            for (int j = 0, jLen = fileInfo.Length; j < jLen; j++)
+            {
+                FileInfo finfo = fileInfo[j];
+                if (finfo.Extension == ".meta") continue;
+                string dpath = string.Format("{0}/{1}", savePath, finfo.Name);
+                Debug.Log(dpath);
+                File.Copy(finfo.FullName, dpath, true);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// 删除当前路径下的所有文件
+        /// 
+        /// 循环删除文件
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        public static void LoopDeleteFile(string sourcePath)
+        {
+            if (!Directory.Exists(sourcePath)) return;
+
+            DirectoryInfo info = new DirectoryInfo(sourcePath);
+
+            FileInfo[] fileInfo = info.GetFiles();
+            for (int j = 0, jLen = fileInfo.Length; j < jLen; j++)
+            {
+                fileInfo[j].Delete();
+            }
+
+            DirectoryInfo[] childInfo = info.GetDirectories();
+            for (int i = 0, len = childInfo.Length; i < len; i++)
+            {
+                DirectoryInfo dinfo = childInfo[i];
+                string folder = string.Format("{0}/{1}", sourcePath, dinfo.Name);
+                LoopDeleteFile(folder);
+                dinfo.Delete();
+            }
+        }
+
+        /// <summary>
         /// 打包ui资源
         /// 
         /// 例如 Prefab
         /// </summary>
         [MenuItem("Assets/LMenu/UI")]
-        public static void UiSourcePackage()
+        public static void PackUiResource()
         {
             // 获得打包保存路径
             string savePath = EditorUtility.OpenFolderPanel("package file path", "", "");
@@ -65,12 +126,12 @@ namespace LGame.LEditor
         }
 
         /// <summary>
-        /// 资源场景打包
+        /// 打包场景资源
         /// 
         /// 例如 Scene
         /// </summary>
         [MenuItem("Assets/LMenu/Scene")]
-        public static void SceneSourcePackage()
+        public static void PackSceneResource()
         {
             // 获得打包保存路径
             string savePath = EditorUtility.OpenFolderPanel("package scene file path", "", "");
@@ -96,6 +157,28 @@ namespace LGame.LEditor
             AssetDatabase.Refresh();
         }
 
+        /// <summary>
+        /// 拷贝打apk包需要的资源文件
+        /// 
+        /// 内容资源
+        /// </summary>
+        [MenuItem("Assets/LMenu/copy apk resource")]
+        public static void CopyApkPackageResource()
+        {
+            // 拷贝资源的源路径
+            string sourcePath = EditorUtility.OpenFolderPanel("copy resource root folder", "", "");
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                SLConsole.WriteError("copy resource root path is null ! (sourcePath = null)");
+                return;
+            }
+            // 拷贝资源的目标路径
+            string targetPath = Application.streamingAssetsPath + "/Assets";
+            if (Directory.Exists(targetPath)) Directory.CreateDirectory(targetPath);
+            LoopCopyFile(sourcePath, targetPath);
+
+            AssetDatabase.Refresh();
+        }
     }
 
 }
